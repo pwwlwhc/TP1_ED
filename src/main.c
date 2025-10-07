@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include "objeto.h"
+#include "cena.h"
+
+void geraCena(objeto_t *vobj, int numobj, cena_t *cena)
+{
+    ordena_por_y(vobj, numobj);
+    
+    for (int i = 0; i < numobj; i++)
+    {
+        float inicio_visivel, fim_visivel;
+        if (objeto_visivel(vobj[i], cena->visiveis, cena->num_visiveis, &inicio_visivel, &fim_visivel))
+        {
+            objeto_t obj_visivel = vobj[i];
+            obj_visivel.inicio = inicio_visivel;
+            obj_visivel.fim = fim_visivel;
+            adiciona_obj(obj_visivel, cena);
+        }
+    }
+}
+
+int main()
+{
+    char tipo;
+    int id, tempo;
+    float x, y, largura;
+
+    objeto_t objetos[100];
+    int num_objetos = 0;
+
+    // le a entrada
+    while (scanf(" %c", &tipo) != EOF)
+    {
+        if (tipo == 'O') // define novo objeto
+        {
+            scanf("%d %f %f %f", &id, &x, &y, &largura);
+            objetos[num_objetos++] = cria_objeto(id, x, y, largura);
+        }
+        else if (tipo == 'M') // movimento
+        {
+            scanf("%d %d %f %f", &tempo, &id, &x, &y);
+            for (int i = 0; i < num_objetos; i++) {
+            if (objetos[i].id == id) {
+                atualiza_pos_obj(&objetos[i], x, y);
+                break;
+            }
+        };
+        }
+        else if (tipo == 'C') // geração de cena
+        {
+            scanf("%d", &tempo);
+            cena_t cena = cria_cena(tempo);
+            geraCena(objetos, num_objetos, &cena);
+            grava_cena(cena, stdout);
+        }
+    }
+    return 0;
+}
