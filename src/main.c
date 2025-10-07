@@ -8,7 +8,7 @@ void geraCena(objeto_t *vobj, int numobj, cena_t *cena)
     
     for (int i = 0; i < numobj; i++)
     {
-        float inicio_visivel, fim_visivel;
+        double inicio_visivel, fim_visivel;
         if (objeto_visivel(vobj[i], cena->visiveis, cena->num_visiveis, &inicio_visivel, &fim_visivel))
         {
             objeto_t obj_visivel = vobj[i];
@@ -23,7 +23,7 @@ int main()
 {
     char tipo;
     int id, tempo;
-    float x, y, largura;
+    double x, y, largura;
 
     objeto_t objetos[100];
     int num_objetos = 0;

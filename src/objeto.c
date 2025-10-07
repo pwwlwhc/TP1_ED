@@ -2,7 +2,7 @@
 #include "objeto.h"
 #include "cena.h"
 
-objeto_t cria_objeto(int id, float x, float y, float largura)
+objeto_t cria_objeto(int id, double x, double y, double largura)
 {
     objeto_t obj;
     obj.id = id;
@@ -14,7 +14,7 @@ objeto_t cria_objeto(int id, float x, float y, float largura)
     return obj;
 }
 
-void atualiza_pos_obj(objeto_t *obj, float novo_x, float novo_y)
+void atualiza_pos_obj(objeto_t *obj, double novo_x, double novo_y)
 {
     obj->x = novo_x;
     obj->y = novo_y;
@@ -39,7 +39,7 @@ void ordena_por_y(objeto_t *vobj, int numobj)
     }
 }
 
-int objeto_visivel(objeto_t obj, objeto_t *visiveis, int num_visiveis, float *inicio_visivel, float *fim_visivel)
+int objeto_visivel(objeto_t obj, objeto_t *visiveis, int num_visiveis, double *inicio_visivel, double *fim_visivel)
 {
     *inicio_visivel = obj.inicio;
     *fim_visivel = obj.fim;
@@ -72,7 +72,7 @@ int objeto_visivel(objeto_t obj, objeto_t *visiveis, int num_visiveis, float *in
             *fim_visivel = frente.inicio;
         }
 
-        //VERIFICAÇÃO DE SEGURANÇA - evita valores inválidos
+        //evita valores invalidos
         if (*inicio_visivel >= *fim_visivel) {
             return 0;
         }
