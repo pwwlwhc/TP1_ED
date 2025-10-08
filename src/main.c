@@ -33,12 +33,12 @@ int main()
     {
         if (tipo == 'O') // define novo objeto
         {
-            scanf("%d %f %f %f", &id, &x, &y, &largura);
+            scanf("%d %lf %lf %lf", &id, &x, &y, &largura);
             objetos[num_objetos++] = cria_objeto(id, x, y, largura);
         }
         else if (tipo == 'M') // movimento
         {
-            scanf("%d %d %f %f", &tempo, &id, &x, &y);
+            scanf("%d %d %lf %lf", &tempo, &id, &x, &y);
             for (int i = 0; i < num_objetos; i++) {
             if (objetos[i].id == id) {
                 atualiza_pos_obj(&objetos[i], x, y);
