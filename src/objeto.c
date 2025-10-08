@@ -39,43 +39,55 @@ void ordena_por_y(objeto_t *vobj, int numobj)
     }
 }
 
-int objeto_visivel(objeto_t obj, objeto_t *visiveis, int num_visiveis, double *inicio_visivel, double *fim_visivel)
+int objeto_visivel(objeto_t obj, objeto_t *visiveis, int num_visiveis, segmento_t *segmentos)
 {
-    *inicio_visivel = obj.inicio;
-    *fim_visivel = obj.fim;
-
-    if (num_visiveis == 0) {
-        return 1;
-    }
+    int num_segmentos = 1;
+    segmentos[0].inicio = obj.inicio;
+    segmentos[0].fim = obj.fim;
 
     for (int i = 0; i < num_visiveis; i++)
     {
         objeto_t frente = visiveis[i];
+        
+        for (int j = 0; j < num_segmentos; j++)
+        {
+            // Pula se não há sobreposição
+            if (segmentos[j].fim <= frente.inicio || segmentos[j].inicio >= frente.fim) {
+                continue;
+            }
 
-        //pula se não tem sobreposição em x
-        if (obj.fim <= frente.inicio || obj.inicio >= frente.fim){
-            continue;
-        }
+            // Segmento totalmente tampado
+            if (frente.inicio <= segmentos[j].inicio && frente.fim >= segmentos[j].fim) {
+                // Remove este segmento
+                for (int k = j; k < num_segmentos - 1; k++) {
+                    segmentos[k] = segmentos[k + 1];
+                }
+                num_segmentos--;
+                j--;
+                continue;
+            }
 
-        //objeto totalmente tampado
-        if (frente.inicio <= *inicio_visivel && frente.fim >= *fim_visivel){
-            return 0;
-        }
-
-        //inicio sendo tampado
-        if (frente.inicio <= *inicio_visivel && frente.fim > *inicio_visivel && frente.fim < *fim_visivel){
-            *inicio_visivel = frente.fim;
-        }
-
-        //final sendo tampado
-        if (frente.fim >= *fim_visivel && frente.inicio > *inicio_visivel && frente.inicio < *fim_visivel) {
-            *fim_visivel = frente.inicio;
-        }
-
-        //evita valores invalidos
-        if (*inicio_visivel >= *fim_visivel) {
-            return 0;
+            // Início sendo tampado
+            if (frente.inicio <= segmentos[j].inicio && frente.fim > segmentos[j].inicio && frente.fim < segmentos[j].fim) {
+                segmentos[j].inicio = frente.fim;
+            }
+            // Final sendo tampado
+            else if (frente.fim >= segmentos[j].fim && frente.inicio > segmentos[j].inicio && frente.inicio < segmentos[j].fim) {
+                segmentos[j].fim = frente.inicio;
+            }
+            // Meio sendo tampado - divide em dois segmentos
+            else if (frente.inicio > segmentos[j].inicio && frente.fim < segmentos[j].fim) {
+                if (num_segmentos < MAX_SEGMENTOS) {
+                    // Cria novo segmento para a parte direita
+                    segmentos[num_segmentos].inicio = frente.fim;
+                    segmentos[num_segmentos].fim = segmentos[j].fim;
+                    num_segmentos++;
+                    
+                    // Atualiza segmento atual para a parte esquerda
+                    segmentos[j].fim = frente.inicio;
+                }
+            }
         }
     }
-    return 1;
+    return num_segmentos;
 }

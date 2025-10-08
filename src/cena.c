@@ -15,7 +15,6 @@ void adiciona_obj(objeto_t obj, cena_t *cena)
     cena->num_visiveis++;
 }
 
-
 void grava_cena(cena_t cena, FILE *saida)
 {
     // Ordenar visiveis por ID antes de imprimir
@@ -32,6 +31,10 @@ void grava_cena(cena_t cena, FILE *saida)
     for (int i = 0; i < cena.num_visiveis; i++)
     {
         objeto_t obj = cena.visiveis[i];
-        fprintf(saida, "S %d %d %.2f %.2f\n", cena.tempo, obj.id, obj.inicio, obj.fim);
+        fprintf(saida, "S %d %d %.2f %.2f\n", 
+            cena.tempo, 
+            obj.id, 
+            obj.inicio, 
+            obj.fim);
     }
 }

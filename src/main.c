@@ -8,13 +8,16 @@ void geraCena(objeto_t *vobj, int numobj, cena_t *cena)
     
     for (int i = 0; i < numobj; i++)
     {
-        double inicio_visivel, fim_visivel;
-        if (objeto_visivel(vobj[i], cena->visiveis, cena->num_visiveis, &inicio_visivel, &fim_visivel))
-        {
-            objeto_t obj_visivel = vobj[i];
-            obj_visivel.inicio = inicio_visivel;
-            obj_visivel.fim = fim_visivel;
-            adiciona_obj(obj_visivel, cena);
+        segmento_t segmentos[MAX_SEGMENTOS];
+        int num_segmentos = objeto_visivel(vobj[i], cena->visiveis, cena->num_visiveis, segmentos);
+        
+        for (int j = 0; j < num_segmentos; j++) {
+            if (segmentos[j].inicio < segmentos[j].fim) {
+                objeto_t obj_visivel = vobj[i];
+                obj_visivel.inicio = segmentos[j].inicio;
+                obj_visivel.fim = segmentos[j].fim;
+                adiciona_obj(obj_visivel, cena);
+            }
         }
     }
 }
@@ -28,7 +31,6 @@ int main()
     objeto_t objetos[100];
     int num_objetos = 0;
 
-    // le a entrada
     while (scanf(" %c", &tipo) != EOF)
     {
         if (tipo == 'O') // define novo objeto
@@ -40,11 +42,11 @@ int main()
         {
             scanf("%d %d %lf %lf", &tempo, &id, &x, &y);
             for (int i = 0; i < num_objetos; i++) {
-            if (objetos[i].id == id) {
-                atualiza_pos_obj(&objetos[i], x, y);
-                break;
+                if (objetos[i].id == id) {
+                    atualiza_pos_obj(&objetos[i], x, y);
+                    break;
+                }
             }
-        };
         }
         else if (tipo == 'C') // geração de cena
         {

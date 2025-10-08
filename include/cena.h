@@ -5,9 +5,9 @@
 
 typedef struct
 {
-    int tempo;              // tempo atual da cena
-    objeto_t visiveis[100]; // vetor fixo de objetos visiveis
-    int num_visiveis;       // quantidade de objetos visiveis na cena
+    int tempo;
+    objeto_t visiveis[100];  // VOLTA para objeto_t (não objeto_visivel_t)
+    int num_visiveis;
 } cena_t;
 
 // Começa uma cena
