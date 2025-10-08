@@ -4,16 +4,21 @@
 
 void geraCena(objeto_t *vobj, int numobj, cena_t *cena)
 {
-    ordena_por_y(vobj, numobj);
+    // cria cópia do objeto
+        objeto_t objetos_ordenados[100];
+    for (int i = 0; i < numobj; i++) {
+        objetos_ordenados[i] = vobj[i];
+    }
+    ordena_por_y(objetos_ordenados, numobj);
     
     for (int i = 0; i < numobj; i++)
     {
         segmento_t segmentos[MAX_SEGMENTOS];
-        int num_segmentos = objeto_visivel(vobj[i], cena->visiveis, cena->num_visiveis, segmentos);
+        int num_segmentos = objeto_visivel(objetos_ordenados[i], cena->visiveis, cena->num_visiveis, segmentos);
         
         for (int j = 0; j < num_segmentos; j++) {
             if (segmentos[j].inicio < segmentos[j].fim) {
-                objeto_t obj_visivel = vobj[i];
+                objeto_t obj_visivel = objetos_ordenados[i]; // Mantém ID correto
                 obj_visivel.inicio = segmentos[j].inicio;
                 obj_visivel.fim = segmentos[j].fim;
                 adiciona_obj(obj_visivel, cena);
